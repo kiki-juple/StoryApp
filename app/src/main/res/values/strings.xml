@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">StoryApp</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="error">Minimum length 6 characters.</string>
+    <string name="login">Login</string>
+    <string name="register">REGISTER</string>
+    <string name="name">Name</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="create_one">Create one</string>
+    <string name="image_story">Image Story</string>
+    <string name="add_story">Add Story</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="upload">Upload</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_photo">Choose photo</string>
+    <string name="write_description">Write description…</string>
+    <string name="capture">Capture</string>
+    <string name="switch_front_camera">Switch front camera</string>
+    <string name="dot">•</string>
+    <string name="logout">logout</string>
+    <string name="detail_photo">detail photo</string>
+</resources>
