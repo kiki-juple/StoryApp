@@ -39,7 +39,7 @@ class RegisterActivity : AppCompatActivity() {
                         }.show()
                     binding.nameEt.text.clear()
                     binding.emailEt.text.clear()
-                    binding.passwordEt.text.clear()
+                    binding.passwordEt.text?.clear()
                 }
             }
         }
@@ -87,7 +87,7 @@ class RegisterActivity : AppCompatActivity() {
         supportActionBar?.hide()
         binding.apply {
             passwordEt.apply {
-                this.filterMinLength(6)
+//                this.filterMinLength(6)
                 this.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
