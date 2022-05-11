@@ -1,15 +1,16 @@
 package com.juple.storyapp.ui
 
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.KeyEvent
-import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatEditText
 
-class CustomTextField : AppCompatEditText, View.OnClickListener {
+class CustomTextField : AppCompatEditText {
 
     constructor(context: Context) : super(context) {
         6.filterMinLength()
@@ -26,8 +27,6 @@ class CustomTextField : AppCompatEditText, View.OnClickListener {
     ) {
         6.filterMinLength()
     }
-
-    override fun onClick(p0: View?) {}
 
     private fun Int.filterMinLength() {
         onFocusChangeListener = OnFocusChangeListener { _, b ->
@@ -51,19 +50,29 @@ class CustomTextField : AppCompatEditText, View.OnClickListener {
                 false
             }
         }
+
+        addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                setLengthError(this@filterMinLength)
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
     }
 
     private fun setLengthError(min: Int) {
         error = try {
             val value = text.toString().trim()
             if (value.length < min) {
-                "Minimum password length is $min."
+                "Minimum password length is $min"
             } else {
                 context.hideSoftKeyboard(this)
                 null
             }
         } catch (e: Exception) {
-            "Minimum password length is $min."
+            "Minimum password length is $min"
         }
     }
 

@@ -2,7 +2,6 @@
     <string name="app_name">StoryApp</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="error">Minimum length 6 characters.</string>
     <string name="login">Login</string>
     <string name="register">REGISTER</string>
     <string name="name">Name</string>

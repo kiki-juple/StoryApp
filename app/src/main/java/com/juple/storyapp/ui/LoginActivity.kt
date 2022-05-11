@@ -42,7 +42,6 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar?.hide()
         binding.apply {
             passwordEt.apply {
-//                this.filterMinLength(6)
                 this.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(
                         p0: CharSequence?,
