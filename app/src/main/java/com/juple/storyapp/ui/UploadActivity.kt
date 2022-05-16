@@ -44,6 +44,10 @@ class UploadActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        viewModel.isLoading.observe(this) {
+            showLoading(it)
+        }
+
         viewModel.responseCode.observe(this) { response ->
             if (response == 201) {
                 Intent(this, MainActivity::class.java).run {
@@ -113,9 +117,6 @@ class UploadActivity : AppCompatActivity() {
             )
 
             binding.tvDesc.clearFocus()
-            viewModel.isLoading.observe(this) {
-                showLoading(it)
-            }
             viewModel.uploadImage(imageMultiPart, description)
 
         } else {

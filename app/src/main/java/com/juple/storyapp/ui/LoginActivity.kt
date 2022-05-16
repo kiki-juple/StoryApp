@@ -78,6 +78,9 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+        viewModel.isLoading.observe(this@LoginActivity) { loading ->
+            showLoading(loading)
+        }
     }
 
     private fun setupAction() {
@@ -88,9 +91,6 @@ class LoginActivity : AppCompatActivity() {
                 val imm =
                     getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(login.windowToken, 0)
-                viewModel.isLoading.observe(this@LoginActivity) { loading ->
-                    showLoading(loading)
-                }
                 val email = emailEt.text.toString().trim()
                 val password = passwordEt.text.toString().trim()
                 viewModel.loginData(email, password)

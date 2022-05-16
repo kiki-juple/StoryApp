@@ -7,7 +7,6 @@ import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatEditText
 
 class CustomTextField : AppCompatEditText {
@@ -65,20 +64,9 @@ class CustomTextField : AppCompatEditText {
     private fun setLengthError(min: Int) {
         error = try {
             val value = text.toString().trim()
-            if (value.length < min) {
-                "Minimum password length is $min"
-            } else {
-                context.hideSoftKeyboard(this)
-                null
-            }
+            if (value.length < min) "Minimum password length is $min" else null
         } catch (e: Exception) {
             "Minimum password length is $min"
-        }
-    }
-
-    private fun Context.hideSoftKeyboard(editText: AppCompatEditText) {
-        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
-            hideSoftInputFromWindow(editText.windowToken, 0)
         }
     }
 }

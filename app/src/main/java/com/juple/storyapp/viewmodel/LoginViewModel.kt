@@ -22,9 +22,6 @@ class LoginViewModel(private val pref: UserPreference) : ViewModel() {
     private var _responseCode = MutableLiveData<Int>()
     val responseCode: LiveData<Int> = _responseCode
 
-    private var _showSnackBar = MutableLiveData<Boolean>()
-    val showSnackBar: LiveData<Boolean> = _showSnackBar
-
     private val _snackText = MutableLiveData<String>()
     val snackText: LiveData<String> = _snackText
 
@@ -42,18 +39,16 @@ class LoginViewModel(private val pref: UserPreference) : ViewModel() {
     }
 
     fun loginData(email: String, password: String) {
-        _showSnackBar.value = false
         _isLoading.value = true
         val client = ApiConfig.getApiService().loginUser(email, password)
         client.enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 _isLoading.value = false
                 _responseCode.value = response.code()
-                Log.e(TAG, "CEK RESPON CODE: ${response.code()}")
+                Log.e(TAG, "CEK RESPONSE CODE: ${response.code()}")
                 if (response.isSuccessful) {
                     _userLogin.value = response.body()?.loginResult
                 } else {
-                    _showSnackBar.value = true
                     _snackText.value = response.errorBody()?.string()
                         ?.let { JSONObject(it).getString("message").trim() }
                     Log.e(TAG, "Failure: ${response.body()}")
@@ -61,7 +56,6 @@ class LoginViewModel(private val pref: UserPreference) : ViewModel() {
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                _showSnackBar.value = true
                 _isLoading.value = false
                 _snackText.value = "Check your internet connection"
                 Log.e(TAG, "onFailure: ${t.message}")
