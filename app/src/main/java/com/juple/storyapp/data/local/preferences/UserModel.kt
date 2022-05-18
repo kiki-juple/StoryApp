@@ -1,4 +1,4 @@
-package com.juple.storyapp.local
+package com.juple.storyapp.data.local.preferences
 
 data class UserModel(
     val userId: String,

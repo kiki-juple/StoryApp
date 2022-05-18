@@ -19,4 +19,6 @@
     <string name="dot">•</string>
     <string name="logout">logout</string>
     <string name="detail_photo">detail photo</string>
+    <string name="unable_to_resolve_host">Unable to resolve host</string>
+    <string name="retry">Retry</string>
 </resources>

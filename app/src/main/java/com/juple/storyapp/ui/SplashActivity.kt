@@ -12,8 +12,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
+import com.juple.storyapp.data.local.preferences.UserPreference
 import com.juple.storyapp.databinding.ActivitySplashBinding
-import com.juple.storyapp.local.UserPreference
 import com.juple.storyapp.viewmodel.LoginViewModel
 import com.juple.storyapp.viewmodel.ViewModelFactory
 
@@ -46,7 +46,7 @@ class SplashActivity : AppCompatActivity() {
     private fun setupViewModel() {
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(UserPreference.getInstance(dataStore))
+            ViewModelFactory(UserPreference.getInstance(dataStore), this)
         )[LoginViewModel::class.java]
 
         viewModel.getUser().observe(this) {

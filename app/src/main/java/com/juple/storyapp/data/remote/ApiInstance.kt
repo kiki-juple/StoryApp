@@ -1,4 +1,4 @@
-package com.juple.storyapp.remote
+package com.juple.storyapp.data.remote
 
 import com.juple.storyapp.BuildConfig
 import okhttp3.MultipartBody
@@ -11,7 +11,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 class ApiConfig {
-
     companion object {
         fun getApiService(): ApiService {
             val loggingInterceptor = if (BuildConfig.DEBUG) {
@@ -58,8 +57,9 @@ interface ApiService {
     ): Call<DefaultResponse>
 
     @GET("v1/stories")
-    fun getStories(
+    suspend fun getStories(
         @Header("Authorization") Authorization: String,
+        @Query("page") page: Int,
         @Query("size") size: Int
-    ): Call<StoryResponse>
+    ): List<User>
 }

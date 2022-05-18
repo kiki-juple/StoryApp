@@ -3,8 +3,8 @@ package com.juple.storyapp.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.juple.storyapp.data.remote.User
 import com.juple.storyapp.databinding.ActivityDetailBinding
-import com.juple.storyapp.remote.User
 import com.juple.storyapp.utils.formatTo
 import com.juple.storyapp.utils.toDate
 

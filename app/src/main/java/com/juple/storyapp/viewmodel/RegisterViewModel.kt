@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.juple.storyapp.remote.ApiConfig
-import com.juple.storyapp.remote.DefaultResponse
+import com.juple.storyapp.data.remote.ApiConfig
+import com.juple.storyapp.data.remote.DefaultResponse
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback

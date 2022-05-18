@@ -2,11 +2,11 @@ package com.juple.storyapp.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.juple.storyapp.local.UserModel
-import com.juple.storyapp.local.UserPreference
-import com.juple.storyapp.remote.ApiConfig
-import com.juple.storyapp.remote.LoginResponse
-import com.juple.storyapp.remote.LoginResult
+import com.juple.storyapp.data.local.preferences.UserModel
+import com.juple.storyapp.data.local.preferences.UserPreference
+import com.juple.storyapp.data.remote.ApiConfig
+import com.juple.storyapp.data.remote.LoginResponse
+import com.juple.storyapp.data.remote.LoginResult
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Call

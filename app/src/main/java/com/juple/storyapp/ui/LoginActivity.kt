@@ -14,9 +14,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import com.juple.storyapp.data.local.preferences.UserModel
+import com.juple.storyapp.data.local.preferences.UserPreference
 import com.juple.storyapp.databinding.ActivityLoginBinding
-import com.juple.storyapp.local.UserModel
-import com.juple.storyapp.local.UserPreference
 import com.juple.storyapp.viewmodel.LoginViewModel
 import com.juple.storyapp.viewmodel.ViewModelFactory
 
@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
     private fun setupViewModel() {
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(UserPreference.getInstance(dataStore))
+            ViewModelFactory(UserPreference.getInstance(dataStore), this)
         )[LoginViewModel::class.java]
         viewModel.responseCode.observe(this) {
             if (it != 200) {

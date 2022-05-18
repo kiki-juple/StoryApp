@@ -6,70 +6,30 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.juple.storyapp.data.remote.User
 import com.juple.storyapp.databinding.ListStoryBinding
-import com.juple.storyapp.remote.User
 import com.juple.storyapp.ui.DetailActivity
 import com.juple.storyapp.utils.formatTo
 import com.juple.storyapp.utils.toDate
 
 
-class StoryAdapter : RecyclerView.Adapter<StoryAdapter.ViewHolder>() {
+class StoryAdapter :
+    PagingDataAdapter<User, StoryAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    private var onItemClickCallback: OnItemClickCallback? = null
-    private var oldStoryList = emptyList<User>()
-
-    inner class DiffCallback(
-        private val oldList: List<User>,
-        private val newList: List<User>
-    ) : DiffUtil.Callback() {
-        override fun getOldListSize() = oldList.size
-
-        override fun getNewListSize() = newList.size
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldList[oldItemPosition].id == newList[newItemPosition].id
-        }
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return when {
-                oldList[oldItemPosition].name == newList[newItemPosition].name -> {
-                    false
-                }
-                oldList[oldItemPosition].description == newList[newItemPosition].description -> {
-                    false
-                }
-                oldList[oldItemPosition].photoUrl == newList[newItemPosition].photoUrl -> {
-                    false
-                }
-                oldList[oldItemPosition].createdAt == newList[newItemPosition].createdAt -> {
-                    false
-                }
-                else -> true
-            }
-        }
-    }
-
-    fun updateList(newStoryList: List<User>) {
-        val diffUtil = DiffCallback(oldStoryList, newStoryList)
-        val diffResult = DiffUtil.calculateDiff(diffUtil)
-        oldStoryList = newStoryList
-        diffResult.dispatchUpdatesTo(this)
-    }
-
-    inner class ViewHolder(private var binding: ListStoryBinding) :
+    class ViewHolder(private val binding: ListStoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        private val onItemClickCallback: OnItemClickCallback? = null
         fun bind(user: User) {
             binding.apply {
                 tvName.text = user.name
                 Glide.with(binding.root)
                     .load(user.photoUrl)
                     .transition(DrawableTransitionOptions.withCrossFade())
-                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .into(imgStory)
                 tvDesc.text = user.description
                 tvTime.text = (user.createdAt).toDate()?.formatTo("dd MMM, YYYY 'at' HH:MM")
@@ -102,12 +62,26 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(oldStoryList[position])
+        val data = getItem(position)
+        if (data != null) {
+            holder.bind(data)
+        }
     }
-
-    override fun getItemCount(): Int = oldStoryList.size
 
     interface OnItemClickCallback {
         fun onItemClicked(data: User)
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<User>() {
+            override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+        }
     }
 }

@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.juple.storyapp.remote.ApiConfig
-import com.juple.storyapp.remote.DefaultResponse
+import com.juple.storyapp.data.remote.ApiConfig
+import com.juple.storyapp.data.remote.DefaultResponse
 import com.juple.storyapp.ui.LoginActivity
 import com.juple.storyapp.ui.SplashActivity
 import okhttp3.MultipartBody

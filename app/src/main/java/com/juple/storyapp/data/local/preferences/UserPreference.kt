@@ -1,4 +1,4 @@
-package com.juple.storyapp.local
+package com.juple.storyapp.data.local.preferences
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
