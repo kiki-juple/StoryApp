@@ -4,10 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.juple.storyapp.data.remote.User
 
 @Database(
-    entities = [User::class, RemoteKeys::class],
+    entities = [StoryEntity::class, RemoteKeys::class],
     version = 2,
     exportSchema = false
 )

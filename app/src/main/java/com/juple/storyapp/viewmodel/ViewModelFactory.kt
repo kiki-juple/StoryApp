@@ -13,7 +13,7 @@ class ViewModelFactory(private val pref: UserPreference, private val context: Co
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
-                return MainViewModel(pref, Injection.provideRepository(context)) as T
+                MainViewModel(pref, Injection.provideRepository(context)) as T
             }
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(pref) as T

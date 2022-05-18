@@ -12,6 +12,9 @@ import retrofit2.http.*
 
 class ApiConfig {
     companion object {
+
+        private const val BASE_URL = "https://story-api.dicoding.dev/"
+
         fun getApiService(): ApiService {
             val loggingInterceptor = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -22,7 +25,7 @@ class ApiConfig {
                 .addInterceptor(loggingInterceptor)
                 .build()
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://story-api.dicoding.dev/")
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()
@@ -51,15 +54,16 @@ interface ApiService {
     @Multipart
     @POST("v1/stories")
     fun uploadStory(
-        @Header("Authorization") Authorization: String,
+        @Header("Authorization") token: String,
         @Part file: MultipartBody.Part,
         @Part("description") description: RequestBody
     ): Call<DefaultResponse>
 
     @GET("v1/stories")
     suspend fun getStories(
-        @Header("Authorization") Authorization: String,
+        @Header("Authorization") token: String,
         @Query("page") page: Int,
-        @Query("size") size: Int
-    ): List<User>
+        @Query("size") size: Int,
+        @Query("location") location: Int
+    ): StoryResponse
 }

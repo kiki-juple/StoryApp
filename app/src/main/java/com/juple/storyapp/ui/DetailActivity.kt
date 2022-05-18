@@ -3,7 +3,7 @@ package com.juple.storyapp.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.juple.storyapp.data.remote.User
+import com.juple.storyapp.data.local.database.StoryEntity
 import com.juple.storyapp.databinding.ActivityDetailBinding
 import com.juple.storyapp.utils.formatTo
 import com.juple.storyapp.utils.toDate
@@ -23,16 +23,16 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun setData() {
-        val user = intent.getParcelableExtra<User>("USER") as User
+        val story = intent.getParcelableExtra<StoryEntity>("USER") as StoryEntity
         binding.apply {
-            detailName.text = user.name
-            detailTime.text = (user.createdAt).toDate()?.formatTo("dd MMM, YYYY 'at' HH:MM")
+            detailName.text = story.name
+            detailTime.text = (story.createdAt).toDate()?.formatTo("dd MMM, YYYY 'at' HH:MM")
             Glide.with(applicationContext)
-                .load(user.photoUrl)
+                .load(story.photoUrl)
                 .into(detailPhoto)
-            detailDesc.text = user.description
+            detailDesc.text = story.description
         }
-        supportActionBar?.title = user.name
+        supportActionBar?.title = story.name
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -7,8 +7,8 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.juple.storyapp.data.local.database.RemoteKeys
 import com.juple.storyapp.data.local.database.StoryDatabase
+import com.juple.storyapp.data.local.database.StoryEntity
 import com.juple.storyapp.data.remote.ApiService
-import com.juple.storyapp.data.remote.User
 import com.juple.storyapp.ui.LoginActivity
 import com.juple.storyapp.ui.SplashActivity
 
@@ -16,11 +16,7 @@ import com.juple.storyapp.ui.SplashActivity
 class StoryRemoteMediator(
     private val database: StoryDatabase,
     private val apiService: ApiService
-) : RemoteMediator<Int, User>() {
-
-    private companion object {
-        const val INITIAL_PAGE_INDEX = 1
-    }
+) : RemoteMediator<Int, StoryEntity>() {
 
     override suspend fun initialize(): InitializeAction {
         return InitializeAction.LAUNCH_INITIAL_REFRESH
@@ -28,7 +24,7 @@ class StoryRemoteMediator(
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, User>
+        state: PagingState<Int, StoryEntity>
     ): MediatorResult {
         val page = when (loadType) {
             LoadType.REFRESH -> {
@@ -58,8 +54,8 @@ class StoryRemoteMediator(
                 LoginActivity.NEW_API_TOKEN
             }
             val responseData =
-                apiService.getStories("Bearer $token", page, state.config.pageSize)
-            val endOfPaginationReached = responseData.isEmpty()
+                apiService.getStories("Bearer $token", page, state.config.pageSize, 1)
+            val endOfPaginationReached = responseData.listStory.isEmpty()
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     database.remoteKeysDao().deleteRemoteKeys()
@@ -67,11 +63,22 @@ class StoryRemoteMediator(
                 }
                 val prevKey = if (page == 1) null else page - 1
                 val nextKey = if (endOfPaginationReached) null else page + 1
-                val keys = responseData.map {
+                val keys = responseData.listStory.map {
                     RemoteKeys(id = it.id, prevKey = prevKey, nextKey = nextKey)
                 }
                 database.remoteKeysDao().insertAll(keys)
-                database.storyDao().insertStory(responseData)
+                for (story in responseData.listStory) {
+                    val data = StoryEntity(
+                        story.id,
+                        story.name,
+                        story.description,
+                        story.photoUrl,
+                        story.createdAt,
+                        story.lat,
+                        story.lon
+                    )
+                    database.storyDao().insertStory(data)
+                }
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (e: Exception) {
@@ -79,23 +86,27 @@ class StoryRemoteMediator(
         }
     }
 
-    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, User>): RemoteKeys? {
-        return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()?.let {
-            database.remoteKeysDao().getRemoteKeysId(it.id)
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, StoryEntity>): RemoteKeys? {
+        return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()?.let { story ->
+            database.remoteKeysDao().getRemoteKeysId(story.id)
         }
     }
 
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, User>): RemoteKeys? {
-        return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()?.let {
-            database.remoteKeysDao().getRemoteKeysId(it.id)
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, StoryEntity>): RemoteKeys? {
+        return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()?.let { story ->
+            database.remoteKeysDao().getRemoteKeysId(story.id)
         }
     }
 
-    private suspend fun getRemoteKeysClosestToCurrentPosition(state: PagingState<Int, User>): RemoteKeys? {
+    private suspend fun getRemoteKeysClosestToCurrentPosition(state: PagingState<Int, StoryEntity>): RemoteKeys? {
         return state.anchorPosition?.let {
             state.closestItemToPosition(it)?.id?.let { id ->
                 database.remoteKeysDao().getRemoteKeysId(id)
             }
         }
+    }
+
+    private companion object {
+        const val INITIAL_PAGE_INDEX = 1
     }
 }

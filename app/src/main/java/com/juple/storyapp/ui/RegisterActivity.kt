@@ -25,25 +25,6 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        viewModel.responseCode.observe(this) {
-            viewModel.snackText.observe(this) { text ->
-                if (it != 200) {
-                    Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT).show()
-                } else {
-                    Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG)
-                        .setAction("Login") {
-                            Intent(this@RegisterActivity, LoginActivity::class.java)
-                                .also { login ->
-                                    startActivity(login)
-                                }
-                        }.show()
-                    binding.nameEt.text.clear()
-                    binding.emailEt.text.clear()
-                    binding.passwordEt.text?.clear()
-                }
-            }
-        }
-
         setupView()
         setupAction()
     }
@@ -67,6 +48,21 @@ class RegisterActivity : AppCompatActivity() {
                     else -> {
                         viewModel.isLoading.observe(this@RegisterActivity) { showLoading(it) }
                         viewModel.registerUser(name, email, password)
+                        viewModel.responseCode.observe(this@RegisterActivity) { responseCode ->
+                            viewModel.snackText.observe(this@RegisterActivity) { text ->
+                                if (responseCode == 201) {
+                                    Snackbar.make(binding.root, text, Snackbar.LENGTH_INDEFINITE)
+                                        .setAction("Login") {
+                                            Intent(this@RegisterActivity, LoginActivity::class.java)
+                                                .also { login ->
+                                                    startActivity(login)
+                                                }
+                                        }.show()
+                                } else {
+                                    Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
                         val imm =
                             getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                         imm.hideSoftInputFromWindow(it.windowToken, 0)
@@ -87,7 +83,6 @@ class RegisterActivity : AppCompatActivity() {
         supportActionBar?.hide()
         binding.apply {
             passwordEt.apply {
-//                this.filterMinLength(6)
                 this.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 

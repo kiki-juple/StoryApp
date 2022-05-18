@@ -66,15 +66,13 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = "Dicoding Story"
 
         val adapter = StoryAdapter()
-//        val layoutManager = LinearLayoutManager(this)
         binding.apply {
-//            rvStory.layoutManager = layoutManager
             rvStory.adapter = adapter.withLoadStateFooter(
-                LoadingStateAdapter { adapter.retry() }
+                footer = LoadingStateAdapter { adapter.retry() }
             )
         }
         viewModel.listStory.observe(this) {
-            if (it != null) adapter.submitData(lifecycle, it)
+            adapter.submitData(lifecycle, it)
         }
     }
 

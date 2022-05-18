@@ -5,15 +5,14 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.juple.storyapp.data.remote.User
 
 @Dao
 interface StoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStory(story: List<User>)
+    suspend fun insertStory(story: StoryEntity)
 
     @Query("SELECT * FROM story")
-    fun getAllStories(): PagingSource<Int, User>
+    fun getAllStories(): PagingSource<Int, StoryEntity>
 
     @Query("DELETE FROM story")
     suspend fun deleteAll()

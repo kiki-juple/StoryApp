@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.juple.storyapp.data.remote.User
+import com.juple.storyapp.data.local.database.StoryEntity
 import com.juple.storyapp.databinding.ListStoryBinding
 import com.juple.storyapp.ui.DetailActivity
 import com.juple.storyapp.utils.formatTo
@@ -19,36 +19,36 @@ import com.juple.storyapp.utils.toDate
 
 
 class StoryAdapter :
-    PagingDataAdapter<User, StoryAdapter.ViewHolder>(DIFF_CALLBACK) {
+    PagingDataAdapter<StoryEntity, StoryAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     class ViewHolder(private val binding: ListStoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val onItemClickCallback: OnItemClickCallback? = null
-        fun bind(user: User) {
+        fun bind(story: StoryEntity) {
             binding.apply {
-                tvName.text = user.name
-                Glide.with(binding.root)
-                    .load(user.photoUrl)
+                tvName.text = story.name
+                Glide.with(itemView.context)
+                    .load(story.photoUrl)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(imgStory)
-                tvDesc.text = user.description
-                tvTime.text = (user.createdAt).toDate()?.formatTo("dd MMM, YYYY 'at' HH:MM")
+                tvDesc.text = story.description
+                tvTime.text = (story.createdAt).toDate()?.formatTo("dd MMM, YYYY 'at' HH:MM")
             }
-            binding.root.setOnClickListener {
-                onItemClickCallback?.onItemClicked(user)
+            itemView.setOnClickListener {
+                onItemClickCallback?.onItemClicked(story)
 
                 val optionsCompat: ActivityOptionsCompat =
                     ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        binding.root.context as Activity,
+                        itemView.context as Activity,
                         Pair(binding.tvName, "name"),
                         Pair(binding.tvTime, "time"),
                         Pair(binding.imgStory, "image"),
                         Pair(binding.tvDesc, "desc")
                     )
 
-                val context = binding.root.context
+                val context = itemView.context
                 Intent(context, DetailActivity::class.java).also {
-                    it.putExtra("USER", user)
+                    it.putExtra("USER", story)
                     context.startActivity(it, optionsCompat.toBundle())
                 }
             }
@@ -69,16 +69,16 @@ class StoryAdapter :
     }
 
     interface OnItemClickCallback {
-        fun onItemClicked(data: User)
+        fun onItemClicked(data: StoryEntity)
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<User>() {
-            override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StoryEntity>() {
+            override fun areItemsTheSame(oldItem: StoryEntity, newItem: StoryEntity): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
+            override fun areContentsTheSame(oldItem: StoryEntity, newItem: StoryEntity): Boolean {
                 return oldItem.id == newItem.id
             }
 

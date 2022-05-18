@@ -1,22 +1,15 @@
 package com.juple.storyapp.data.remote
 
-import android.os.Parcelable
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
-@Entity(tableName = "story")
-data class User(
-    @PrimaryKey(autoGenerate = false)
+data class Story(
     val id: String,
     val name: String,
     val description: String,
     val photoUrl: String,
     val createdAt: String,
-    val lat: Double? = null,
-    val lon: Double? = null
-) : Parcelable
+    val lat: Double,
+    val lon: Double
+)
 
 data class DefaultResponse(
     val error: Boolean,
@@ -33,4 +26,10 @@ data class LoginResult(
     val userId: String,
     val name: String,
     val token: String
+)
+
+data class StoryResponse(
+    val error: Boolean,
+    val message: String,
+    val listStory: List<Story>
 )
