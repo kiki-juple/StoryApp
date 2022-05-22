@@ -17,8 +17,11 @@
     <string name="capture">Capture</string>
     <string name="switch_front_camera">Switch front camera</string>
     <string name="dot">•</string>
-    <string name="logout">logout</string>
+    <string name="logout">Logout</string>
     <string name="detail_photo">detail photo</string>
     <string name="unable_to_resolve_host">Unable to resolve host</string>
     <string name="retry">Retry</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="maps">Maps</string>
+    <string name="app_title">Dicoding Story</string>
 </resources>
